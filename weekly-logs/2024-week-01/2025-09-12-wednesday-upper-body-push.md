@@ -56,6 +56,7 @@ Perfect — let’s lock in your **Cycle 4, Week 1 Wednesday workout**: an **Upp
 
 I used 25lb plates for the floor presses 25lb DBs for the arnods, and include chest presses, and 15lbs for lateral raises.
 The Finisher WOD took exactly 6 minutes.
+
 ---
 
 Want me to sketch Thursday’s core + conditioning circuit next or prep Saturday’s pull workout to round out your lifting split? You’re building Cycle 4 with precision and shared momentum.
