@@ -9,6 +9,7 @@ Perfect — let’s lock in your **Cycle 4, Week 1 Wednesday workout**: an **Upp
 - [x] Triceps Volume  
 - [x] Controlled Pressing Mechanics  
 - [x] Rack-Free, Home Gym Compatible  
+- [ ] 
 
 ---
 
