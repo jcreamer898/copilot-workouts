@@ -15,31 +15,46 @@ const title = frontmatter.title || 'Copilot Workouts';
 
 <Layout title={title}>
 	<article class="max-w-none content-article px-4 md:px-8">
-		<header class="content-header mb-12 pb-8">
-			{frontmatter.title && (
-				<h1 class="content-title text-4xl md:text-5xl font-bold mb-6 leading-tight">{frontmatter.title}</h1>
-			)}
-			{frontmatter.date && (
-				<time class="content-date text-base" datetime={frontmatter.date.toISOString()}>
-					{frontmatter.date.toLocaleDateString('en-US', { 
-						year: 'numeric', 
-						month: 'long', 
-						day: 'numeric' 
-					})}
-				</time>
-			)}
-		</header>
-		
-		<div class="prose prose-space max-w-none prose-relaxed">
-			<slot />
+		<div class="content-background rounded-xl p-8 shadow-lg">
+			<header class="content-header mb-12 pb-8">
+				{frontmatter.title && (
+					<h1 class="content-title text-4xl md:text-5xl font-bold mb-6 leading-tight">{frontmatter.title}</h1>
+				)}
+				{frontmatter.date && (
+					<time class="content-date text-base" datetime={frontmatter.date.toISOString()}>
+						{frontmatter.date.toLocaleDateString('en-US', { 
+							year: 'numeric', 
+							month: 'long', 
+							day: 'numeric' 
+						})}
+					</time>
+				)}
+			</header>
+			
+			<div class="content-prose max-w-none">
+				<slot />
+			</div>
 		</div>
 	</article>
+	
+	<!-- Debug script -->
+	<script>
+		console.log('Theme attribute:', document.documentElement.getAttribute('data-theme'));
+		console.log('Dark class present:', document.documentElement.classList.contains('dark'));
+		console.log('Content prose element:', document.querySelector('.content-prose'));
+	</script>
 </Layout>
 
 <style>
 	/* Content layout specific styles with high specificity */
 	.content-article {
 		color: var(--color-text) !important;
+	}
+	
+	/* Content background - gives the blog post a proper background */
+	.content-background {
+		background-color: var(--color-card) !important;
+		border: 1px solid var(--color-border);
 	}
 	
 	.content-header {
@@ -54,22 +69,18 @@ const title = frontmatter.title || 'Copilot Workouts';
 		color: var(--color-text-secondary) !important;
 	}
 	/* Custom prose styling that adapts to our space theme */
-	.prose {
+	.content-prose {
 		color: var(--color-text) !important;
 		max-width: none;
 		font-family: 'Inter', system-ui, sans-serif;
 		line-height: 1.8;
 		font-size: 1.125rem;
 		letter-spacing: 0.025em;
-	}
-
-	/* Enhanced spacing for relaxed reading */
-	.prose-relaxed {
 		padding: 2rem 0;
 	}
 
 	/* Headings with better spacing */
-	.prose h1 {
+	.content-prose h1 {
 		font-size: 2.5rem;
 		font-weight: 700;
 		line-height: 1.2;
@@ -81,7 +92,7 @@ const title = frontmatter.title || 'Copilot Workouts';
 		letter-spacing: -0.025em;
 	}
 
-	.prose h2 {
+	.content-prose h2 {
 		font-size: 2rem;
 		font-weight: 600;
 		line-height: 1.3;
@@ -93,7 +104,7 @@ const title = frontmatter.title || 'Copilot Workouts';
 		letter-spacing: -0.025em;
 	}
 
-	.prose h3 {
+	.content-prose h3 {
 		font-size: 1.625rem;
 		font-weight: 600;
 		line-height: 1.4;
@@ -103,7 +114,7 @@ const title = frontmatter.title || 'Copilot Workouts';
 		letter-spacing: -0.025em;
 	}
 
-	.prose h4 {
+	.content-prose h4 {
 		font-size: 1.375rem;
 		font-weight: 600;
 		line-height: 1.4;
@@ -113,7 +124,7 @@ const title = frontmatter.title || 'Copilot Workouts';
 		letter-spacing: -0.025em;
 	}
 
-	.prose h5, .prose h6 {
+	.content-prose h5, .content-prose h6 {
 		font-size: 1.25rem;
 		font-weight: 500;
 		line-height: 1.4;
@@ -124,25 +135,25 @@ const title = frontmatter.title || 'Copilot Workouts';
 	}
 
 	/* Paragraphs with generous spacing */
-	.prose p {
+	.content-prose p {
 		margin-top: 1.5rem;
 		margin-bottom: 1.5rem;
 		color: var(--color-text) !important;
 		line-height: 1.8;
 	}
 
-	.prose strong {
+	.content-prose strong {
 		font-weight: 600;
 		color: var(--color-text) !important;
 	}
 
-	.prose em {
+	.content-prose em {
 		font-style: italic;
 		color: var(--color-text) !important;
 	}
 
 	/* Links */
-	.prose a {
+	.content-prose a {
 		color: var(--color-accent);
 		text-decoration: underline;
 		text-decoration-color: var(--color-accent);
@@ -150,39 +161,39 @@ const title = frontmatter.title || 'Copilot Workouts';
 		transition: all 0.2s ease;
 	}
 
-	.prose a:hover {
+	.content-prose a:hover {
 		color: var(--color-accent-hover);
 		text-decoration-color: var(--color-accent-hover);
 	}
 
 	/* Lists with better spacing */
-	.prose ul, .prose ol {
+	.content-prose ul, .content-prose ol {
 		margin-top: 1.5rem;
 		margin-bottom: 1.5rem;
 		padding-left: 2rem;
 		color: var(--color-text) !important;
 	}
 
-	.prose li {
+	.content-prose li {
 		margin-top: 0.75rem;
 		margin-bottom: 0.75rem;
 		color: var(--color-text) !important;
 		line-height: 1.7;
 	}
 
-	.prose li::marker {
+	.content-prose li::marker {
 		color: var(--color-text-secondary) !important;
 	}
 
 	/* Nested lists */
-	.prose li > ul,
-	.prose li > ol {
+	.content-prose li > ul,
+	.content-prose li > ol {
 		margin-top: 0.75rem;
 		margin-bottom: 0.75rem;
 	}
 
 	/* Blockquotes with enhanced spacing */
-	.prose blockquote {
+	.content-prose blockquote {
 		border-left: 4px solid var(--color-accent);
 		background-color: var(--color-bg-secondary);
 		padding: 1.5rem 2rem;
@@ -194,21 +205,21 @@ const title = frontmatter.title || 'Copilot Workouts';
 		line-height: 1.7;
 	}
 
-	.prose blockquote p {
+	.content-prose blockquote p {
 		margin: 1rem 0;
 		color: var(--color-text-secondary) !important;
 	}
 
-	.prose blockquote p:first-child {
+	.content-prose blockquote p:first-child {
 		margin-top: 0;
 	}
 
-	.prose blockquote p:last-child {
+	.content-prose blockquote p:last-child {
 		margin-bottom: 0;
 	}
 
 	/* Code with better spacing and readability */
-	.prose code {
+	.content-prose code {
 		background-color: var(--color-bg-secondary);
 		color: var(--color-text) !important;
 		padding: 0.25rem 0.5rem;
@@ -219,7 +230,7 @@ const title = frontmatter.title || 'Copilot Workouts';
 		letter-spacing: 0;
 	}
 
-	.prose pre {
+	.content-prose pre {
 		background-color: var(--color-bg-secondary);
 		border: 1px solid var(--color-border);
 		border-radius: 0.75rem;
@@ -231,7 +242,7 @@ const title = frontmatter.title || 'Copilot Workouts';
 		line-height: 1.6;
 	}
 
-	.prose pre code {
+	.content-prose pre code {
 		background: none;
 		border: none;
 		padding: 0;
@@ -240,7 +251,7 @@ const title = frontmatter.title || 'Copilot Workouts';
 	}
 
 	/* Tables with improved spacing */
-	.prose table {
+	.content-prose table {
 		width: 100%;
 		border-collapse: collapse;
 		margin: 2rem 0;
@@ -251,7 +262,7 @@ const title = frontmatter.title || 'Copilot Workouts';
 		font-size: 0.95rem;
 	}
 
-	.prose th, .prose td {
+	.content-prose th, .content-prose td {
 		padding: 1rem 1.25rem;
 		text-align: left;
 		border-bottom: 1px solid var(--color-border);
@@ -259,22 +270,22 @@ const title = frontmatter.title || 'Copilot Workouts';
 		line-height: 1.6;
 	}
 
-	.prose th {
+	.content-prose th {
 		background-color: var(--color-bg-secondary);
 		font-weight: 600;
 		color: var(--color-text) !important;
 	}
 
-	.prose tr:last-child td {
+	.content-prose tr:last-child td {
 		border-bottom: none;
 	}
 
-	.prose tr:nth-child(even) {
+	.content-prose tr:nth-child(even) {
 		background-color: var(--color-bg-secondary);
 	}
 
 	/* Horizontal rules with better spacing */
-	.prose hr {
+	.content-prose hr {
 		border: none !important;
 		height: 2px;
 		background: linear-gradient(90deg, transparent, var(--color-border), transparent) !important;
@@ -286,7 +297,7 @@ const title = frontmatter.title || 'Copilot Workouts';
 	}
 
 	/* Images with improved spacing */
-	.prose img {
+	.content-prose img {
 		max-width: 100%;
 		height: auto;
 		border-radius: 0.75rem;
@@ -296,49 +307,55 @@ const title = frontmatter.title || 'Copilot Workouts';
 	}
 
 	/* Task lists */
-	.prose input[type="checkbox"] {
+	.content-prose input[type="checkbox"] {
 		margin-right: 0.75rem;
 		accent-color: var(--color-accent);
 	}
 
 	/* Enhanced spacing after headings */
-	.prose h1 + p,
-	.prose h2 + p,
-	.prose h3 + p,
-	.prose h4 + p,
-	.prose h5 + p,
-	.prose h6 + p {
+	.content-prose h1 + p,
+	.content-prose h2 + p,
+	.content-prose h3 + p,
+	.content-prose h4 + p,
+	.content-prose h5 + p,
+	.content-prose h6 + p {
 		margin-top: 0.75rem;
 	}
 
 	/* Better spacing for first and last elements */
-	.prose > *:first-child {
+	.content-prose > *:first-child {
 		margin-top: 0;
 	}
 
-	.prose > *:last-child {
+	.content-prose > *:last-child {
 		margin-bottom: 0;
 	}
 
 	/* Override any remaining Tailwind text colors */
-	.prose * {
+	.content-prose * {
 		color: inherit !important;
 	}
 
-	/* Ensure all direct children of prose have proper color */
-	.prose > * {
+	/* Ensure all direct children of content-prose have proper color */
+	.content-prose > * {
 		color: var(--color-text) !important;
+	}
+	
+	
+	/* Keep links with accent colors */
+	.content-prose a {
+		color: var(--color-accent) !important;
 	}
 
 	/* Add breathing room for content sections */
-	.prose > h2,
-	.prose > h3,
-	.prose > h4 {
+	.content-prose > h2,
+	.content-prose > h3,
+	.content-prose > h4 {
 		scroll-margin-top: 2rem;
 	}
 
 	/* Enhanced readability for links within content */
-	.prose a {
+	.content-prose a {
 		color: var(--color-accent) !important;
 		text-decoration: underline;
 		text-decoration-color: var(--color-accent);
@@ -347,9 +364,48 @@ const title = frontmatter.title || 'Copilot Workouts';
 		transition: all 0.2s ease;
 	}
 
-	.prose a:hover {
+	.content-prose a:hover {
 		color: var(--color-accent-hover) !important;
 		text-decoration-color: var(--color-accent-hover);
 		text-decoration-thickness: 2px;
+	}
+	
+	/* FINAL FIX: Explicit color overrides for maximum readability */
+	html:not([data-theme="dark"]) .content-prose,
+	html:not([data-theme="dark"]) .content-prose *:not(a),
+	html:not([data-theme="dark"]) .content-prose p,
+	html:not([data-theme="dark"]) .content-prose h1,
+	html:not([data-theme="dark"]) .content-prose h2,
+	html:not([data-theme="dark"]) .content-prose h3,
+	html:not([data-theme="dark"]) .content-prose h4,
+	html:not([data-theme="dark"]) .content-prose h5,
+	html:not([data-theme="dark"]) .content-prose h6,
+	html:not([data-theme="dark"]) .content-prose li,
+	html:not([data-theme="dark"]) .content-prose ul,
+	html:not([data-theme="dark"]) .content-prose ol,
+	html:not([data-theme="dark"]) .content-prose div,
+	html:not([data-theme="dark"]) .content-prose span,
+	html:not([data-theme="dark"]) .content-prose strong,
+	html:not([data-theme="dark"]) .content-prose em {
+		color: #1e293b !important;
+	}
+	
+	html[data-theme="dark"] .content-prose,
+	html[data-theme="dark"] .content-prose *:not(a),
+	html[data-theme="dark"] .content-prose p,
+	html[data-theme="dark"] .content-prose h1,
+	html[data-theme="dark"] .content-prose h2,
+	html[data-theme="dark"] .content-prose h3,
+	html[data-theme="dark"] .content-prose h4,
+	html[data-theme="dark"] .content-prose h5,
+	html[data-theme="dark"] .content-prose h6,
+	html[data-theme="dark"] .content-prose li,
+	html[data-theme="dark"] .content-prose ul,
+	html[data-theme="dark"] .content-prose ol,
+	html[data-theme="dark"] .content-prose div,
+	html[data-theme="dark"] .content-prose span,
+	html[data-theme="dark"] .content-prose strong,
+	html[data-theme="dark"] .content-prose em {
+		color: #f1f5f9 !important;
 	}
 </style>

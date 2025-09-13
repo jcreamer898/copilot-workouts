@@ -26,11 +26,15 @@ const { title, description = "A fitness blog tracking workouts, benchmarks, and 
 		
 		<!-- Theme detection script to prevent flash -->
 		<script is:inline>
-			const theme = localStorage.getItem('theme') || 
-				(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+			let theme = localStorage.getItem('theme');
+			if (!theme) {
+				theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			}
 			document.documentElement.setAttribute('data-theme', theme);
 			if (theme === 'dark') {
 				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
 			}
 		</script>
 	</head>

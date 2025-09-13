@@ -4,14 +4,14 @@
 
 <button 
   id="theme-toggle" 
-  class="focus-ring relative inline-flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
+  class="focus-ring relative inline-flex items-center justify-center w-10 h-10 rounded-lg border transition-all duration-200 theme-toggle-btn"
   aria-label="Toggle theme"
   title="Toggle theme"
 >
   <!-- Sun icon for light mode -->
   <svg 
     id="sun-icon" 
-    class="w-5 h-5 text-yellow-500 transition-all duration-300 opacity-100 dark:opacity-0 dark:rotate-90"
+    class="w-5 h-5 transition-all duration-300 sun-icon"
     fill="none" 
     stroke="currentColor" 
     viewBox="0 0 24 24"
@@ -27,7 +27,7 @@
   <!-- Moon icon for dark mode -->
   <svg 
     id="moon-icon" 
-    class="absolute w-5 h-5 text-blue-400 transition-all duration-300 opacity-0 dark:opacity-100 rotate-90 dark:rotate-0"
+    class="absolute w-5 h-5 transition-all duration-300 moon-icon"
     fill="none" 
     stroke="currentColor" 
     viewBox="0 0 24 24"
@@ -44,8 +44,6 @@
 <script>
   function initThemeToggle() {
     const themeToggle = document.getElementById('theme-toggle');
-    const sunIcon = document.getElementById('sun-icon');
-    const moonIcon = document.getElementById('moon-icon');
     
     // Get the stored theme or default to 'light'
     const getStoredTheme = () => localStorage.getItem('theme') || 'light';
@@ -55,7 +53,7 @@
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
       
-      // Update icon visibility
+      // Also manage the 'dark' class for Tailwind compatibility
       if (theme === 'dark') {
         document.documentElement.classList.add('dark');
       } else {
@@ -64,14 +62,15 @@
     };
     
     // Initialize theme on page load
-    const initialTheme = getStoredTheme();
-    setTheme(initialTheme);
+    let initialTheme = getStoredTheme();
     
-    // Check for system preference if no stored theme
+    // Only check system preference if no theme is stored
     if (!localStorage.getItem('theme')) {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(prefersDark ? 'dark' : 'light');
+      initialTheme = prefersDark ? 'dark' : 'light';
     }
+    
+    setTheme(initialTheme);
     
     // Theme toggle handler
     themeToggle?.addEventListener('click', () => {
@@ -106,25 +105,39 @@
 </script>
 
 <style>
-  #theme-toggle {
+  .theme-toggle-btn {
     background: var(--color-card);
     border-color: var(--color-border);
     box-shadow: var(--shadow-sm);
   }
   
-  #theme-toggle:hover {
+  .theme-toggle-btn:hover {
     background: var(--color-card-hover);
     border-color: var(--color-border-hover);
     box-shadow: var(--shadow);
   }
   
-  /* Tailwind classes for dark mode */
-  .dark #sun-icon {
+  /* Sun icon styling */
+  .sun-icon {
+    color: #f59e0b; /* yellow-500 */
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+  
+  /* Moon icon styling */
+  .moon-icon {
+    color: #60a5fa; /* blue-400 */
     opacity: 0;
     transform: rotate(90deg);
   }
   
-  .dark #moon-icon {
+  /* Dark theme overrides */
+  [data-theme="dark"] .sun-icon {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+  
+  [data-theme="dark"] .moon-icon {
     opacity: 1;
     transform: rotate(0deg);
   }
