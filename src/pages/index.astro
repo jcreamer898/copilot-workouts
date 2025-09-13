@@ -1,0 +1,114 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+// Get all content from all collections
+const workoutLogs = await getCollection('workout-logs');
+const benchmarks = await getCollection('benchmarks');
+const plans = await getCollection('plans');
+const sharedWorkouts = await getCollection('shared-workouts');
+const templates = await getCollection('templates');
+
+// Combine all content and sort by date (if available) or by title
+const allContent = [
+	...workoutLogs.map(item => ({ ...item, collection: 'workout-logs', type: 'Workout Log' })),
+	...benchmarks.map(item => ({ ...item, collection: 'benchmarks', type: 'Benchmark' })),
+	...plans.map(item => ({ ...item, collection: 'plans', type: 'Plan' })),
+	...sharedWorkouts.map(item => ({ ...item, collection: 'shared-workouts', type: 'Shared Workout' })),
+	...templates.map(item => ({ ...item, collection: 'templates', type: 'Template' })),
+].sort((a, b) => {
+	// Sort by date if available, otherwise by title
+	if (a.data.date && b.data.date) {
+		return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+	}
+	return a.data.title?.localeCompare(b.data.title || '') || a.slug.localeCompare(b.slug);
+});
+
+// Group content by collection for the category view
+const contentByCollection = {
+	'workout-logs': workoutLogs,
+	'benchmarks': benchmarks,
+	'plans': plans,
+	'shared-workouts': sharedWorkouts,
+	'templates': templates,
+};
+---
+
+<Layout title="Copilot Workouts - Fitness Blog">
+	<div class="space-y-12">
+		<!-- Hero Section -->
+		<section class="text-center py-12">
+			<h1 class="text-5xl font-bold text-gray-900 mb-6">
+				Copilot Workouts
+			</h1>
+			<p class="text-xl text-gray-600 max-w-2xl mx-auto">
+				Track your fitness journey with workout logs, benchmarks, training plans, and more.
+			</p>
+		</section>
+
+		<!-- Categories Overview -->
+		<section>
+			<h2 class="text-3xl font-bold text-gray-900 mb-8">Browse by Category</h2>
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{Object.entries(contentByCollection).map(([collection, items]) => (
+					<a 
+						href={`/${collection}`}
+						class="block p-6 border border-gray-200 rounded-lg hover:shadow-lg transition-shadow bg-white"
+					>
+						<h3 class="text-xl font-semibold text-gray-900 mb-2 capitalize">
+							{collection.replace('-', ' ')}
+						</h3>
+						<p class="text-gray-600 mb-3">
+							{items.length} {items.length === 1 ? 'item' : 'items'}
+						</p>
+						<span class="text-blue-600 font-medium">
+							View all →
+						</span>
+					</a>
+				))}
+			</div>
+		</section>
+
+		<!-- Recent Content -->
+		<section>
+			<h2 class="text-3xl font-bold text-gray-900 mb-8">Recent Content</h2>
+			<div class="space-y-4">
+				{allContent.slice(0, 10).map((item) => (
+					<article class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow bg-white">
+						<div class="flex items-start justify-between">
+							<div class="flex-1">
+								<h3 class="text-xl font-semibold text-gray-900 mb-2">
+									<a 
+										href={`/${item.collection}/${item.slug}`}
+										class="hover:text-blue-600 transition-colors"
+									>
+										{item.data.title || item.slug.replace(/-/g, ' ')}
+									</a>
+								</h3>
+								<div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+									<span class="bg-gray-100 px-2 py-1 rounded text-xs font-medium">
+										{item.type}
+									</span>
+									{item.data.date && (
+										<time datetime={item.data.date.toISOString()}>
+											{item.data.date.toLocaleDateString('en-US', { 
+												year: 'numeric', 
+												month: 'short', 
+												day: 'numeric' 
+											})}
+										</time>
+									)}
+								</div>
+								{item.body && (
+									<p class="text-gray-600 line-clamp-2">
+										{item.body.slice(0, 150)}...
+									</p>
+								)}
+							</div>
+						</div>
+					</article>
+				))}
+			</div>
+		</section>
+	</div>
+</Layout>

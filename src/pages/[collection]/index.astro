@@ -1,0 +1,103 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	return [
+		{ params: { collection: 'workout-logs' } },
+		{ params: { collection: 'benchmarks' } },
+		{ params: { collection: 'plans' } },
+		{ params: { collection: 'shared-workouts' } },
+		{ params: { collection: 'templates' } },
+	];
+}
+
+const { collection } = Astro.params;
+const content = await getCollection(collection as any);
+
+// Sort content by date if available, otherwise by title
+const sortedContent = content.sort((a, b) => {
+	if (a.data.date && b.data.date) {
+		return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+	}
+	return a.data.title?.localeCompare(b.data.title || '') || a.slug.localeCompare(b.slug);
+});
+
+const collectionTitle = collection?.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()) || '';
+---
+
+<Layout title={`${collectionTitle} - Copilot Workouts`}>
+	<div class="space-y-8">
+		<!-- Header -->
+		<header class="text-center py-8">
+			<h1 class="text-4xl font-bold text-gray-900 mb-4">
+				{collectionTitle}
+			</h1>
+			<p class="text-xl text-gray-600">
+				{sortedContent.length} {sortedContent.length === 1 ? 'item' : 'items'}
+			</p>
+		</header>
+
+		<!-- Navigation -->
+		<nav class="flex justify-center">
+			<a 
+				href="/"
+				class="text-blue-600 hover:text-blue-800 transition-colors font-medium"
+			>
+				← Back to Home
+			</a>
+		</nav>
+
+		<!-- Content Grid -->
+		<section class="grid gap-6">
+			{sortedContent.map((item) => (
+				<article class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow bg-white">
+					<div class="space-y-3">
+						<h2 class="text-2xl font-semibold text-gray-900">
+							<a 
+								href={`/${collection}/${item.slug}`}
+								class="hover:text-blue-600 transition-colors"
+							>
+								{item.data.title || item.slug.replace(/-/g, ' ')}
+							</a>
+						</h2>
+						
+						<div class="flex items-center space-x-4 text-sm text-gray-500">
+							{item.data.date && (
+								<time datetime={item.data.date.toISOString()}>
+									{item.data.date.toLocaleDateString('en-US', { 
+										year: 'numeric', 
+										month: 'long', 
+										day: 'numeric' 
+									})}
+								</time>
+							)}
+							{item.data.tags && (
+								<div class="flex space-x-2">
+									{item.data.tags.map((tag: string) => (
+										<span class="bg-gray-100 px-2 py-1 rounded text-xs font-medium">
+											{tag}
+										</span>
+									))}
+								</div>
+							)}
+						</div>
+						
+						{item.body && (
+							<p class="text-gray-600 leading-relaxed">
+								{item.body.slice(0, 300)}...
+							</p>
+						)}
+						
+						<a 
+							href={`/${collection}/${item.slug}`}
+							class="inline-block text-blue-600 hover:text-blue-800 transition-colors font-medium"
+						>
+							Read more →
+						</a>
+					</div>
+				</article>
+			))}
+		</section>
+	</div>
+</Layout>
