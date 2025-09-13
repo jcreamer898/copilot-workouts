@@ -16,12 +16,37 @@ const allContent = [
 	...plans.map(item => ({ ...item, collection: 'plans', type: 'Plan' })),
 	...sharedWorkouts.map(item => ({ ...item, collection: 'shared-workouts', type: 'Shared Workout' })),
 	...templates.map(item => ({ ...item, collection: 'templates', type: 'Template' })),
-].sort((a, b) => {
-	// Sort by date if available, otherwise by title
-	if (a.data.date && b.data.date) {
-		return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+].sort((a: any, b: any) => {
+	// First try to get dates from frontmatter
+	let dateA = a.data.date;
+	let dateB = b.data.date;
+	
+	// If no frontmatter date, try to extract from filename (YYYY-MM-DD format)
+	if (!dateA && a.id) {
+		const dateMatch = a.id.match(/^(\d{4}-\d{2}-\d{2})/);
+		if (dateMatch) {
+			dateA = new Date(dateMatch[1]);
+		}
 	}
-	return a.data.title?.localeCompare(b.data.title || '') || a.slug.localeCompare(b.slug);
+	
+	if (!dateB && b.id) {
+		const dateMatch = b.id.match(/^(\d{4}-\d{2}-\d{2})/);
+		if (dateMatch) {
+			dateB = new Date(dateMatch[1]);
+		}
+	}
+	
+	// Sort by date if available (most recent first), otherwise by title
+	if (dateA && dateB) {
+		return new Date(dateB).getTime() - new Date(dateA).getTime();
+	}
+	
+	// If only one has a date, prioritize it
+	if (dateA && !dateB) return -1;
+	if (!dateA && dateB) return 1;
+	
+	// Fallback to alphabetical sorting
+	return a.data.title?.localeCompare(b.data.title || '') || a.id.localeCompare(b.id);
 });
 
 // Group content by collection for the category view
@@ -79,10 +104,10 @@ const contentByCollection = {
 							<div class="flex-1">
 								<h3 class="text-xl font-semibold text-gray-900 mb-2">
 									<a 
-										href={`/${item.collection}/${item.slug}`}
+										href={`/${item.collection}/${item.id}`}
 										class="hover:text-blue-600 transition-colors"
 									>
-										{item.data.title || item.slug.replace(/-/g, ' ')}
+										{item.data.title || item.id.replace(/-/g, ' ')}
 									</a>
 								</h3>
 								<div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">

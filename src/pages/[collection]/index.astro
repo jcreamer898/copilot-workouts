@@ -15,11 +15,37 @@ export async function getStaticPaths() {
 const { collection } = Astro.params;
 const content = await getCollection(collection as any);
 
-// Sort content by date if available, otherwise by title
-const sortedContent = content.sort((a, b) => {
-	if (a.data.date && b.data.date) {
-		return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+// Enhanced sorting function that extracts dates from filenames if not in frontmatter
+const sortedContent = content.sort((a: any, b: any) => {
+	// First try to get dates from frontmatter
+	let dateA = a.data.date;
+	let dateB = b.data.date;
+	
+	// If no frontmatter date, try to extract from filename (YYYY-MM-DD format)
+	if (!dateA && a.slug) {
+		const dateMatch = a.slug.match(/^(\d{4}-\d{2}-\d{2})/);
+		if (dateMatch) {
+			dateA = new Date(dateMatch[1]);
+		}
 	}
+	
+	if (!dateB && b.slug) {
+		const dateMatch = b.slug.match(/^(\d{4}-\d{2}-\d{2})/);
+		if (dateMatch) {
+			dateB = new Date(dateMatch[1]);
+		}
+	}
+	
+	// Sort by date if available (most recent first), otherwise by title
+	if (dateA && dateB) {
+		return new Date(dateB).getTime() - new Date(dateA).getTime();
+	}
+	
+	// If only one has a date, prioritize it
+	if (dateA && !dateB) return -1;
+	if (!dateA && dateB) return 1;
+	
+	// Fallback to alphabetical sorting
 	return a.data.title?.localeCompare(b.data.title || '') || a.slug.localeCompare(b.slug);
 });
 
@@ -50,7 +76,7 @@ const collectionTitle = collection?.replace('-', ' ').replace(/\b\w/g, l => l.to
 
 		<!-- Content Grid -->
 		<section class="grid gap-6">
-			{sortedContent.map((item) => (
+			{sortedContent.map((item: any) => (
 				<article class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow bg-white">
 					<div class="space-y-3">
 						<h2 class="text-2xl font-semibold text-gray-900">
