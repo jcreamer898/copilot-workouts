@@ -1,6 +1,5 @@
 ---
 import Layout from './Layout.astro';
-import 'github-markdown-css/github-markdown-light.css';
 
 export interface Props {
 	frontmatter: {
@@ -15,13 +14,13 @@ const title = frontmatter.title || 'Copilot Workouts';
 ---
 
 <Layout title={title}>
-	<article class="max-w-none">
-		<header class="mb-8 pb-6 border-b border-gray-200">
+	<article class="max-w-none content-article px-4 md:px-8">
+		<header class="content-header mb-12 pb-8">
 			{frontmatter.title && (
-				<h1 class="text-4xl font-bold text-gray-900 mb-4">{frontmatter.title}</h1>
+				<h1 class="content-title text-4xl md:text-5xl font-bold mb-6 leading-tight">{frontmatter.title}</h1>
 			)}
 			{frontmatter.date && (
-				<time class="text-gray-500 text-sm" datetime={frontmatter.date.toISOString()}>
+				<time class="content-date text-base" datetime={frontmatter.date.toISOString()}>
 					{frontmatter.date.toLocaleDateString('en-US', { 
 						year: 'numeric', 
 						month: 'long', 
@@ -31,138 +30,326 @@ const title = frontmatter.title || 'Copilot Workouts';
 			)}
 		</header>
 		
-		<div class="markdown-body">
+		<div class="prose prose-space max-w-none prose-relaxed">
 			<slot />
 		</div>
 	</article>
 </Layout>
 
 <style>
-	/* Override some GitHub markdown styles for better integration */
-	.markdown-body {
-		box-sizing: border-box;
-		min-width: 200px;
+	/* Content layout specific styles with high specificity */
+	.content-article {
+		color: var(--color-text) !important;
+	}
+	
+	.content-header {
+		border-bottom: 1px solid var(--color-border);
+	}
+	
+	.content-title {
+		color: var(--color-text) !important;
+	}
+	
+	.content-date {
+		color: var(--color-text-secondary) !important;
+	}
+	/* Custom prose styling that adapts to our space theme */
+	.prose {
+		color: var(--color-text) !important;
 		max-width: none;
-		margin: 0;
-		padding: 0;
-		background-color: transparent;
-		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-		font-size: 16px;
-		line-height: 1.5;
-		word-wrap: break-word;
+		font-family: 'Inter', system-ui, sans-serif;
+		line-height: 1.8;
+		font-size: 1.125rem;
+		letter-spacing: 0.025em;
 	}
 
-	/* Ensure proper spacing for GitHub-style headings */
-	.markdown-body h1 {
-		font-size: 2em;
+	/* Enhanced spacing for relaxed reading */
+	.prose-relaxed {
+		padding: 2rem 0;
+	}
+
+	/* Headings with better spacing */
+	.prose h1 {
+		font-size: 2.5rem;
+		font-weight: 700;
+		line-height: 1.2;
+		margin-top: 3rem;
+		margin-bottom: 1.5rem;
+		color: var(--color-text) !important;
+		border-bottom: 2px solid var(--color-border);
+		padding-bottom: 0.75rem;
+		letter-spacing: -0.025em;
+	}
+
+	.prose h2 {
+		font-size: 2rem;
 		font-weight: 600;
-		padding-bottom: 0.3em;
-		border-bottom: 1px solid #d1d5da;
+		line-height: 1.3;
+		margin-top: 2.5rem;
+		margin-bottom: 1.25rem;
+		color: var(--color-text) !important;
+		border-bottom: 1px solid var(--color-border);
+		padding-bottom: 0.5rem;
+		letter-spacing: -0.025em;
+	}
+
+	.prose h3 {
+		font-size: 1.625rem;
+		font-weight: 600;
+		line-height: 1.4;
+		margin-top: 2rem;
+		margin-bottom: 1rem;
+		color: var(--color-text) !important;
+		letter-spacing: -0.025em;
+	}
+
+	.prose h4 {
+		font-size: 1.375rem;
+		font-weight: 600;
+		line-height: 1.4;
+		margin-top: 1.75rem;
+		margin-bottom: 0.75rem;
+		color: var(--color-text) !important;
+		letter-spacing: -0.025em;
+	}
+
+	.prose h5, .prose h6 {
+		font-size: 1.25rem;
+		font-weight: 500;
+		line-height: 1.4;
+		margin-top: 1.5rem;
+		margin-bottom: 0.75rem;
+		color: var(--color-text) !important;
+		letter-spacing: -0.025em;
+	}
+
+	/* Paragraphs with generous spacing */
+	.prose p {
+		margin-top: 1.5rem;
+		margin-bottom: 1.5rem;
+		color: var(--color-text) !important;
+		line-height: 1.8;
+	}
+
+	.prose strong {
+		font-weight: 600;
+		color: var(--color-text) !important;
+	}
+
+	.prose em {
+		font-style: italic;
+		color: var(--color-text) !important;
+	}
+
+	/* Links */
+	.prose a {
+		color: var(--color-accent);
+		text-decoration: underline;
+		text-decoration-color: var(--color-accent);
+		text-underline-offset: 2px;
+		transition: all 0.2s ease;
+	}
+
+	.prose a:hover {
+		color: var(--color-accent-hover);
+		text-decoration-color: var(--color-accent-hover);
+	}
+
+	/* Lists with better spacing */
+	.prose ul, .prose ol {
+		margin-top: 1.5rem;
+		margin-bottom: 1.5rem;
+		padding-left: 2rem;
+		color: var(--color-text) !important;
+	}
+
+	.prose li {
+		margin-top: 0.75rem;
+		margin-bottom: 0.75rem;
+		color: var(--color-text) !important;
+		line-height: 1.7;
+	}
+
+	.prose li::marker {
+		color: var(--color-text-secondary) !important;
+	}
+
+	/* Nested lists */
+	.prose li > ul,
+	.prose li > ol {
+		margin-top: 0.75rem;
+		margin-bottom: 0.75rem;
+	}
+
+	/* Blockquotes with enhanced spacing */
+	.prose blockquote {
+		border-left: 4px solid var(--color-accent);
+		background-color: var(--color-bg-secondary);
+		padding: 1.5rem 2rem;
+		margin: 2rem 0;
+		border-radius: 0.75rem;
+		font-style: italic;
+		color: var(--color-text-secondary) !important;
+		font-size: 1.125rem;
+		line-height: 1.7;
+	}
+
+	.prose blockquote p {
+		margin: 1rem 0;
+		color: var(--color-text-secondary) !important;
+	}
+
+	.prose blockquote p:first-child {
 		margin-top: 0;
-		margin-bottom: 16px;
 	}
 
-	.markdown-body h2 {
-		font-size: 1.5em;
-		font-weight: 600;
-		padding-bottom: 0.3em;
-		border-bottom: 1px solid #d1d5da;
-		margin-top: 24px;
-		margin-bottom: 16px;
+	.prose blockquote p:last-child {
+		margin-bottom: 0;
 	}
 
-	.markdown-body h3 {
-		font-size: 1.25em;
-		font-weight: 600;
-		margin-top: 24px;
-		margin-bottom: 16px;
+	/* Code with better spacing and readability */
+	.prose code {
+		background-color: var(--color-bg-secondary);
+		color: var(--color-text) !important;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.5rem;
+		font-family: 'JetBrains Mono', 'Fira Code', monospace;
+		font-size: 0.9em;
+		border: 1px solid var(--color-border);
+		letter-spacing: 0;
 	}
 
-	/* GitHub-style tables */
-	.markdown-body table {
-		border-collapse: collapse;
-		border-spacing: 0;
+	.prose pre {
+		background-color: var(--color-bg-secondary);
+		border: 1px solid var(--color-border);
+		border-radius: 0.75rem;
+		padding: 2rem;
+		overflow-x: auto;
+		margin: 2rem 0;
+		font-family: 'JetBrains Mono', 'Fira Code', monospace;
+		font-size: 0.9rem;
+		line-height: 1.6;
+	}
+
+	.prose pre code {
+		background: none;
+		border: none;
+		padding: 0;
+		color: var(--color-text) !important;
+		font-size: inherit;
+	}
+
+	/* Tables with improved spacing */
+	.prose table {
 		width: 100%;
-		overflow: auto;
-		background-color: transparent;
-		margin-top: 0;
-		margin-bottom: 16px;
+		border-collapse: collapse;
+		margin: 2rem 0;
+		background-color: var(--color-card);
+		border: 1px solid var(--color-border);
+		border-radius: 0.75rem;
+		overflow: hidden;
+		font-size: 0.95rem;
 	}
 
-	.markdown-body table th,
-	.markdown-body table td {
-		padding: 6px 13px;
-		border: 1px solid #d1d5da;
+	.prose th, .prose td {
+		padding: 1rem 1.25rem;
+		text-align: left;
+		border-bottom: 1px solid var(--color-border);
+		color: var(--color-text) !important;
+		line-height: 1.6;
 	}
 
-	.markdown-body table th {
+	.prose th {
+		background-color: var(--color-bg-secondary);
 		font-weight: 600;
-		background-color: #f6f8fa;
+		color: var(--color-text) !important;
 	}
 
-	.markdown-body table tr:nth-child(2n) {
-		background-color: #f6f8fa;
+	.prose tr:last-child td {
+		border-bottom: none;
 	}
 
-	/* GitHub-style blockquotes */
-	.markdown-body blockquote {
-		padding: 0 1em;
-		color: #656d76;
-		border-left: 0.25em solid #d1d5da;
-		margin: 0 0 16px 0;
+	.prose tr:nth-child(even) {
+		background-color: var(--color-bg-secondary);
 	}
 
-	/* GitHub-style code blocks */
-	.markdown-body pre {
-		padding: 16px;
-		overflow: auto;
-		font-size: 85%;
-		line-height: 1.45;
-		background-color: #f6f8fa;
-		border-radius: 6px;
-		margin-bottom: 16px;
+	/* Horizontal rules with better spacing */
+	.prose hr {
+		border: none !important;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, var(--color-border), transparent) !important;
+		margin: 3rem 0 !important;
+		padding: 0 !important;
+		width: 100%;
+		opacity: 0.6;
+		border-radius: 1px;
 	}
 
-	.markdown-body code {
-		padding: 0.2em 0.4em;
-		margin: 0;
-		font-size: 85%;
-		background-color: rgba(175, 184, 193, 0.2);
-		border-radius: 6px;
+	/* Images with improved spacing */
+	.prose img {
+		max-width: 100%;
+		height: auto;
+		border-radius: 0.75rem;
+		margin: 2rem auto;
+		box-shadow: var(--shadow-md);
+		display: block;
 	}
 
-	.markdown-body pre code {
-		background-color: transparent;
-		border: 0;
-		padding: 0;
-		margin: 0;
-		font-size: 100%;
+	/* Task lists */
+	.prose input[type="checkbox"] {
+		margin-right: 0.75rem;
+		accent-color: var(--color-accent);
 	}
 
-	/* GitHub-style lists */
-	.markdown-body ul,
-	.markdown-body ol {
-		padding-left: 2em;
+	/* Enhanced spacing after headings */
+	.prose h1 + p,
+	.prose h2 + p,
+	.prose h3 + p,
+	.prose h4 + p,
+	.prose h5 + p,
+	.prose h6 + p {
+		margin-top: 0.75rem;
+	}
+
+	/* Better spacing for first and last elements */
+	.prose > *:first-child {
 		margin-top: 0;
-		margin-bottom: 16px;
 	}
 
-	.markdown-body li {
-		margin-top: 0.25em;
+	.prose > *:last-child {
+		margin-bottom: 0;
 	}
 
-	/* GitHub-style checkboxes */
-	.markdown-body input[type="checkbox"] {
-		margin: 0 0.2em 0.25em -1.4em;
-		vertical-align: middle;
+	/* Override any remaining Tailwind text colors */
+	.prose * {
+		color: inherit !important;
 	}
 
-	/* Horizontal rules */
-	.markdown-body hr {
-		height: 0.25em;
-		padding: 0;
-		margin: 24px 0;
-		background-color: #d1d5da;
-		border: 0;
+	/* Ensure all direct children of prose have proper color */
+	.prose > * {
+		color: var(--color-text) !important;
+	}
+
+	/* Add breathing room for content sections */
+	.prose > h2,
+	.prose > h3,
+	.prose > h4 {
+		scroll-margin-top: 2rem;
+	}
+
+	/* Enhanced readability for links within content */
+	.prose a {
+		color: var(--color-accent) !important;
+		text-decoration: underline;
+		text-decoration-color: var(--color-accent);
+		text-underline-offset: 3px;
+		text-decoration-thickness: 1px;
+		transition: all 0.2s ease;
+	}
+
+	.prose a:hover {
+		color: var(--color-accent-hover) !important;
+		text-decoration-color: var(--color-accent-hover);
+		text-decoration-thickness: 2px;
 	}
 </style>

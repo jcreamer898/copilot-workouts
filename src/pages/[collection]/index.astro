@@ -53,13 +53,13 @@ const collectionTitle = collection?.replace('-', ' ').replace(/\b\w/g, l => l.to
 ---
 
 <Layout title={`${collectionTitle} - Copilot Workouts`}>
-	<div class="space-y-8">
+	<div class="space-y-12 px-4 md:px-8">
 		<!-- Header -->
-		<header class="text-center py-8">
-			<h1 class="text-4xl font-bold text-gray-900 mb-4">
+		<header class="text-center py-12">
+			<h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight collection-title">
 				{collectionTitle}
 			</h1>
-			<p class="text-xl text-gray-600">
+			<p class="text-xl md:text-2xl collection-subtitle">
 				{sortedContent.length} {sortedContent.length === 1 ? 'item' : 'items'}
 			</p>
 		</header>
@@ -68,27 +68,27 @@ const collectionTitle = collection?.replace('-', ' ').replace(/\b\w/g, l => l.to
 		<nav class="flex justify-center">
 			<a 
 				href="/"
-				class="text-blue-600 hover:text-blue-800 transition-colors font-medium"
+				class="font-medium transition-colors hover:underline collection-link text-lg"
 			>
 				← Back to Home
 			</a>
 		</nav>
 
 		<!-- Content Grid -->
-		<section class="grid gap-6">
+		<section class="grid gap-8">
 			{sortedContent.map((item: any) => (
-				<article class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow bg-white">
-					<div class="space-y-3">
-						<h2 class="text-2xl font-semibold text-gray-900">
+				<article class="card p-8">
+					<div class="space-y-6">
+						<h2 class="text-3xl font-semibold leading-tight">
 							<a 
 								href={`/${collection}/${item.slug}`}
-								class="hover:text-blue-600 transition-colors"
+								class="transition-colors hover:underline collection-item-title"
 							>
 								{item.data.title || item.slug.replace(/-/g, ' ')}
 							</a>
 						</h2>
 						
-						<div class="flex items-center space-x-4 text-sm text-gray-500">
+						<div class="flex items-center space-x-6 text-base collection-meta">
 							{item.data.date && (
 								<time datetime={item.data.date.toISOString()}>
 									{item.data.date.toLocaleDateString('en-US', { 
@@ -99,9 +99,9 @@ const collectionTitle = collection?.replace('-', ' ').replace(/\b\w/g, l => l.to
 								</time>
 							)}
 							{item.data.tags && (
-								<div class="flex space-x-2">
+								<div class="flex space-x-3">
 									{item.data.tags.map((tag: string) => (
-										<span class="bg-gray-100 px-2 py-1 rounded text-xs font-medium">
+										<span class="badge">
 											{tag}
 										</span>
 									))}
@@ -110,14 +110,14 @@ const collectionTitle = collection?.replace('-', ' ').replace(/\b\w/g, l => l.to
 						</div>
 						
 						{item.body && (
-							<p class="text-gray-600 leading-relaxed">
+							<p class="leading-relaxed text-lg collection-excerpt">
 								{item.body.slice(0, 300)}...
 							</p>
 						)}
 						
 						<a 
 							href={`/${collection}/${item.slug}`}
-							class="inline-block text-blue-600 hover:text-blue-800 transition-colors font-medium"
+							class="inline-block font-medium transition-colors hover:underline collection-read-more text-lg"
 						>
 							Read more →
 						</a>
@@ -127,3 +127,33 @@ const collectionTitle = collection?.replace('-', ' ').replace(/\b\w/g, l => l.to
 		</section>
 	</div>
 </Layout>
+
+<style>
+	.collection-title {
+		color: var(--color-text) !important;
+	}
+	
+	.collection-subtitle {
+		color: var(--color-text-secondary) !important;
+	}
+	
+	.collection-link {
+		color: var(--color-accent) !important;
+	}
+	
+	.collection-item-title {
+		color: var(--color-text) !important;
+	}
+	
+	.collection-meta {
+		color: var(--color-text-secondary) !important;
+	}
+	
+	.collection-excerpt {
+		color: var(--color-text-secondary) !important;
+	}
+	
+	.collection-read-more {
+		color: var(--color-accent) !important;
+	}
+</style>
